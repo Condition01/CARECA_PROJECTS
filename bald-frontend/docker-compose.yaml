@@ -1,0 +1,16 @@
+version: "3.3"
+
+services:
+  careca_frontend:
+    build: .
+    image: "careca_frontend:v1"
+    container_name: "careca_generator_frontend"
+    ports:
+      - "80:80"
+    networks:
+      - carecas_net
+#    entrypoint: "tail -f /dev/null"
+
+networks:
+  carecas_net:
+    external: true

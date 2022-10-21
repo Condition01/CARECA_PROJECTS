@@ -1,0 +1,74 @@
+version: "3.3"
+
+services:
+  careca_mssql_server:
+    image: mcr.microsoft.com/mssql/server:2019-CU18-ubuntu-20.04
+    container_name: mssql_careca
+    ports:
+      - 1433:1433
+    environment:
+      - ACCEPT_EULA=Y
+      - MSSQL_SA_PASSWORD=Password@1234
+    networks:
+      - carecas_net
+
+  careca_backend1:
+    image: "carecagenerator:v1"
+    container_name: "careca_generator_backend1"
+    networks:
+      - carecas_net
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=http://+:8080
+      - INSTANCE=Instance 1
+      - DATA_SOURCE=careca_mssql_server
+      - USER_ID=sa
+      - PASSWORD=Password@1234
+      - DATABASE=CARECA_DB
+    depends_on:
+      - careca_mssql_server
+
+  careca_backend2:
+    image: "carecagenerator:v1"
+    container_name: "careca_generator_backend2"
+    networks:
+      - carecas_net
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=http://+:8080
+      - INSTANCE=Instance 2
+      - DATA_SOURCE=careca_mssql_server
+      - USER_ID=sa
+      - PASSWORD=Password@1234
+      - DATABASE=CARECA_DB
+    depends_on:
+      - careca_mssql_server
+
+  nginx:
+      image: 'nginx:1.23.0'
+      container_name: 'nginx'
+      environment:
+        - 'NGINX_PORT=8080'
+      volumes:
+        - './volumes/nginx/templates:/etc/nginx/templates'
+      ports:
+        - '8080:8080'
+      networks:
+        - 'carecas_net'
+      depends_on:
+        - 'careca_backend1'
+        - 'careca_backend2'
+
+  careca_frontend:
+    image: "careca_frontend:v1"
+    container_name: "careca_generator_frontend"
+    ports:
+      - "80:80"
+    networks:
+      - carecas_net
+    depends_on:
+      - 'nginx'
+
+networks:
+  carecas_net:
+    external: true

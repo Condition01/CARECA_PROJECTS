@@ -1,0 +1,39 @@
+<div class="container">
+  <div class="row mt-5">
+    <div class="col-12">
+      <div class="text-center">
+        <button
+          type="button"
+          class="btn btn-primary btn-lg"
+          (click)="buscarCareca()"
+        >
+          Gerar Careca
+        </button>
+      </div>
+    </div>
+  </div>
+  <div *ngIf="careca">
+    <div class="row mt-5">
+      <div class="col-12">
+        <div class="text-center">
+          <img [src]="careca.image" class="rounded img" alt="Imagem" />
+        </div>
+      </div>
+    </div>
+    <div class="row mt-2">
+      <div class="col-12">
+        <div class="text-center">
+          <label class="form-label fw-bold">ID: </label> {{ careca.id }}
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-12">
+        <div class="text-center">
+          <label class="form-label fw-bold">Instance: </label>
+          {{ careca.instance }}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

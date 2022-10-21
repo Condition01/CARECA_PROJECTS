@@ -1,0 +1,19 @@
+version: "3.3"
+
+services:
+  careca_backend:
+    image: "carecagenerator:v1"
+    container_name: "careca_generator_backend"
+    ports:
+      - "8080:80"
+    networks:
+      - carecas_net
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=http://+:80
+      - INSTANCE=Instance 1
+#    entrypoint: "tail -f /dev/null"
+
+networks:
+  carecas_net:
+    external: true
